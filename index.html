@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Weather App</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="search-section">
+                <div class="input-wrapper">
+                    <span class="material-symbols-rounded">search</span>
+                    <input type="search" placeholder="Enter a City Name" class="search-input" />
+                </div>
+                <button class="location-button">
+                    <span class="material-symbols-rounded">my_location</span>
+                </button>
+            </div>
+            <div class="no-results">
+                <img src="icons/no-result.svg" class="weather-icon" />
+                <h3 class="title">Something went wrong!</h3>
+                <p class="message">
+                    We're unable to retrieve the weather details. Enure you've entered a valid city or try again later.
+                </p>
+            </div>
+            <div class="weather-section">
+                <div class="current-weather">
+                    <img src="icons/clouds.svg" class="weather-icon" />
+                    <h2 class="temperature">00<span>&deg;C</span></h2>
+                    <p class="description">Weather description</p>
+                </div>
+            </div>
+            <div class="hourly-weather">
+                <ul class="weather-list"></ul>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
