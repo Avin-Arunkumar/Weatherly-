@@ -27,21 +27,35 @@ const weatherCodes = {
 };
 const displayHourlyForecast = (hourlyData) => {
   const now = new Date();
-  const currentHour = now.getHours(); // Get the current hour
-  const next24HoursData = hourlyData.filter(({ time }) => {
-    const forecastTime = new Date(time).getHours(); // Extract hour from forecast time
-    return forecastTime >= currentHour || forecastTime < currentHour + 24;
+  const currentTime = now.getTime();
+
+  // Filter hours that are in the future (including current hour)
+  let futureHours = hourlyData.filter((item) => {
+    const itemTime = new Date(item.time).getTime();
+    return itemTime >= currentTime;
   });
 
-  // Update UI with full 24-hour forecast
-  hourlyWeatherDiv.innerHTML = next24HoursData
+  // If we don't have 24 future hours, add hours from the next day
+  if (futureHours.length < 24) {
+    const remainingHours = 24 - futureHours.length;
+    futureHours = futureHours.concat(hourlyData.slice(0, remainingHours));
+  }
+
+  // Take exactly 24 hours
+  const next24Hours = futureHours.slice(0, 24);
+
+  hourlyWeatherDiv.innerHTML = next24Hours
     .map((item) => {
       const temperature = Math.floor(item.temp_c);
-      const timeFormatted = new Date(item.time).toLocaleTimeString([], {
+      const time = new Date(item.time);
+
+      // Format time as "HH:MM PM/AM" (e.g., "07:00 PM")
+      const timeFormatted = time.toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
       });
+
       const weatherIcon = Object.keys(weatherCodes).find((icon) =>
         weatherCodes[icon].includes(item.condition.code)
       );
@@ -54,6 +68,14 @@ const displayHourlyForecast = (hourlyData) => {
     })
     .join("");
 };
+
+// Auto-update every hour
+setInterval(() => {
+  const cityName = searchInput.value.trim();
+  if (cityName) {
+    setupWeatherRequest(cityName);
+  }
+}, 60 * 60 * 1000); // Refresh every hour
 
 const getWeatherDetails = async (API_URL) => {
   window.innerWidth <= 768 && searchInput.blur();
